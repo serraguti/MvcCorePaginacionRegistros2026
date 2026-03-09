@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis.Elfie.Diagnostics;
+using Microsoft.Identity.Client;
 using MvcCorePaginacionRegistros.Models;
 using MvcCorePaginacionRegistros.Repositories;
 using System.Runtime.CompilerServices;
@@ -95,6 +97,71 @@ namespace MvcCorePaginacionRegistros.Controllers
         public IActionResult Index()
         {
             return View();
+        }
+
+        public async Task<IActionResult>
+            EmpleadosOficio(int? posicion, string oficio)
+        {
+            if (posicion == null)
+            {
+                posicion = 1;
+                return View();
+            }
+            else
+            {
+                List<Empleado> empleados = await
+                    this.repo.GetGrupoEmpleadosOficioAsync
+                    (oficio, posicion.Value);
+                int registros =
+                    await this.repo.GetEmpleadosOficioCountAsync(oficio);
+                ViewData["REGISTROS"] = registros;
+                ViewData["OFICIO"] = oficio;
+                return View(empleados);
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> 
+            EmpleadosOficio(string oficio)
+        {
+            List<Empleado> empleados = await
+                this.repo.GetGrupoEmpleadosOficioAsync(oficio, 1);
+            int registros = await
+                this.repo.GetEmpleadosOficioCountAsync(oficio);
+            ViewData["REGISTROS"] = registros;
+            ViewData["OFICIO"] = oficio;
+            return View(empleados);
+        }
+
+        public async Task<IActionResult>
+            EmpleadosOficioOut(int? posicion, string oficio)
+        {
+            if (posicion == null)
+            {
+                posicion = 1;
+                return View();
+            }
+            else
+            {
+                ModelEmpleadosOficio model = await
+                    this.repo.GetGrupoEmpleadosOficioOutAsync
+                    (oficio, posicion.Value);
+                ViewData["REGISTROS"] = model.NumeroRegistros;
+                ViewData["OFICIO"] = oficio;
+                return View(model.Empleados);
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult>
+            EmpleadosOficioOut(string oficio)
+        {
+            ModelEmpleadosOficio model = await
+                this.repo.GetGrupoEmpleadosOficioOutAsync
+                (oficio, 1);
+            ViewData["REGISTROS"] = model.NumeroRegistros;
+            ViewData["OFICIO"] = oficio;
+            return View(model.Empleados);
         }
     }
 }
