@@ -28,6 +28,34 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Paginación
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li class="dropdown-item">
+                                    <a class="nav-link text-dark"
+                                       asp-controller="Paginacion"
+                                       asp-action="RegistroVistaDepartamento">
+                                        Registro a registro
+                                    </a>
+                                </li>
+                                <li class="dropdown-item">
+                                    <a class="nav-link text-dark"
+                                       asp-controller="Paginacion"
+                                       asp-action="GrupoVistaDepartamentos">
+                                        Paginación grupo
+                                    </a>
+                                </li>
+                                <li class="dropdown-item">
+                                    <a class="nav-link text-dark"
+                                       asp-controller="Paginacion"
+                                       asp-action="GrupoDepartamentos">
+                                        Paginación Departamentos
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
                     </ul>
                 </div>
             </div>
