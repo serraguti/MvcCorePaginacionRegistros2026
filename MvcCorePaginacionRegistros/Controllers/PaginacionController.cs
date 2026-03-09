@@ -77,6 +77,21 @@ namespace MvcCorePaginacionRegistros.Controllers
             return View(departamentos);
         }
 
+        public async Task<IActionResult>
+            PaginarGrupoEmpleados(int? posicion)
+        {
+            if (posicion == null)
+            {
+                posicion = 1;
+            }
+            int numRegistros = await
+                this.repo.GetEmpleadosCountAsync();
+            ViewData["REGISTROS"] = numRegistros;
+            List<Empleado> empleados = await
+                this.repo.GetGrupoEmpleadosAsync(posicion.Value);
+            return View(empleados);
+        }
+
         public IActionResult Index()
         {
             return View();

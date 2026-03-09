@@ -22,6 +22,20 @@ as
 	where POSICION >= @posicion and POSICION < (@posicion + 2)
 go
 exec SP_GRUPO_DEPARTAMENTOS 1
+
+create view V_GRUPO_EMPLEADOS
+as
+	select cast(row_number() over (order by APELLIDO) as int)
+	as POSICION, EMP_NO, APELLIDO, OFICIO, SALARIO, DEPT_NO
+	from EMP
+go
+create procedure SP_GRUPO_EMPLEADOS
+(@posicion int)
+as
+	select EMP_NO, APELLIDO, OFICIO, SALARIO, DEPT_NO 
+	from V_GRUPO_EMPLEADOS
+	where POSICION >= @posicion and POSICION < (@posicion + 3)
+go
 */
 #endregion
 
@@ -71,6 +85,22 @@ namespace MvcCorePaginacionRegistros.Repositories
                 new SqlParameter("@posicion", posicion);
             var consulta =
                 this.context.Departamentos.FromSqlRaw(sql, pamPosicion);
+            return await consulta.ToListAsync();
+        }
+
+        public async Task<int> GetEmpleadosCountAsync()
+        {
+            return await this.context.Empleados.CountAsync();
+        }
+
+        public async Task<List<Empleado>> 
+            GetGrupoEmpleadosAsync(int posicion)
+        {
+            string sql = "SP_GRUPO_EMPLEADOS @posicion";
+            SqlParameter pamPosicion =
+                new SqlParameter("@posicion", posicion);
+            var consulta =
+                this.context.Empleados.FromSqlRaw(sql, pamPosicion);
             return await consulta.ToListAsync();
         }
     }
